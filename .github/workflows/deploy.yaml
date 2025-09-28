@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
-      - name: Authenticate to Sandbox
-        run: sf org login web --auth-url ${{ secrets.SF_LOGIN_URL }} --username ${{ secrets.SF_USERNAME }} --password ${{ secrets.SF_PASSWORD }} --set-default
+
+      - name: Authenticate to Dev Sandbox
+        run: sf org login userpass --instance-url https://test.salesforce.com --username ${{ secrets.SF_USERNAME }} --password ${{ secrets.SF_PASSWORD }} --set-default
+
       - name: Deploy Metadata
         run: sf project deploy start
