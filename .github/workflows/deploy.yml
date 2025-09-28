@@ -2,16 +2,19 @@ name: Deploy to Dev Sandbox
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # 👈 Allows manual run
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Salesforce CLI
-        run: npm install -g @salesforce/cli
+
+      - name: Install sfdx CLI
+        run: npm install -g sfdx-cli
+
       - name: Authenticate to Dev Sandbox
-        run: sf org login userpass --instance-url https://test.salesforce.com --username ${{ secrets.SF_USERNAME }} --password ${{ secrets.SF_PASSWORD }} --set-default
+        run: sfdx force:auth:login -i https://test.salesforce.com -u "${{ secrets.SF_USERNAME }}" -p "${{ secrets.SF_PASSWORD }}" --setdefaultusername
+
       - name: Deploy Metadata
-        run: sf project deploy start
+        run: sfdx force:source:deploy -p force-app
